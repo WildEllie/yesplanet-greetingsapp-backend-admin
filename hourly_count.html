@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(loadData);
+	  function loadData(){
+		//ajax save greeting to server
+		var jqxhr = $.ajax({
+			url: "http://fb.upupamedia.com/apps/yesplanet/greeting2015/appmanagement/get_hourly_count.php",
+			type: "GET"
+			})
+		.done(function(data) {
+			drawChart(JSON.parse(data));
+		})
+		.fail(function() {
+			alert( "אופס, משהו לא הלך טוב.\nאנא נסו שנית" );
+		});
+	  }
+      function drawChart(dataArray) {
+		var data = new google.visualization.DataTable();
+		data.addColumn('timeofday', 'X');
+		data.addColumn('number', 'Count');
+
+		data.addRows(dataArray);
+        //var data = google.visualization.arrayToDataTable(dataArray);
+
+        var options = {
+			title: 'מספר הסמסים בשעה',
+			legend: { position: 'bottom' },
+			curveType: 'function',
+			hAxis: {
+			  title: 'Time'
+			},
+			vAxis: {
+			  title: 'Popularity'
+			},
+			backgroundColor: '#f1f8e9'
+		};
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>

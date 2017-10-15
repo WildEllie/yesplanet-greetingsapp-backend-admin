@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(loadData);
+	  function loadData(){
+		//ajax save greeting to server
+		var jqxhr = $.ajax({
+			url: "http://fb.upupamedia.com/apps/yesplanet/greeting2015/appmanagement/get_sender_histogram.php",
+			type: "GET"
+			})
+		.done(function(data) {
+			drawChart(JSON.parse(data));
+		})
+		.fail(function() {
+			alert( "אופס, משהו לא הלך טוב.\nאנא נסו שנית" );
+		});
+	  }
+      function drawChart(dataArray) {
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        var options = {
+          title: 'מספר הסמסים  לשולח',
+          legend: { position: 'none' }
+        };
+
+        var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>
